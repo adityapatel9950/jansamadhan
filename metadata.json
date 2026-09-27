@@ -1,0 +1,6 @@
+{
+  "name": "JanSamadhan - Jharkhand Societal Innovation Platform",
+  "description": "Smart India Hackathon 2026 Phase 1 portal connecting citizens, Jharkhand state departments, universities, students, faculty, and industry partners to solve societal challenges.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
