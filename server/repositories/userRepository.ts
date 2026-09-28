@@ -581,13 +581,7 @@ export class UserRepository {
   }
 
   async getDemoAccounts(): Promise<SafeUser[]> {
-    return memoryRecords.map(({ user, profile }) => {
-      const { passwordHash: _, ...safe } = user;
-      return {
-        ...safe,
-        profile,
-      };
-    });
+    return [];
   }
 }
 

@@ -1,7 +1,7 @@
 # JanSamadhan (जनसमाधान) — Jharkhand Societal Innovation Platform
 
 **Smart India Hackathon 2026 (SIH 2026) — Phase 2 Release**  
-*A Student-Built Societal Problem Intake & Academic R&D Portal for Jharkhand*
+_A Student-Built Societal Problem Intake & Academic R&D Portal for Jharkhand_
 
 ---
 
@@ -10,8 +10,9 @@
 **JanSamadhan** is a technology platform connecting citizens, state government departments, universities, students, faculty, and industry/CSR partners in Jharkhand. It tackles ground-level societal challenges across Jharkhand's 24 districts—including rural micro-irrigation, drinking water fluorosis, tribal handicraft grading, and mining culvert subsidences.
 
 ### Development Philosophy
+
 - **Authentic Student Team Engineering**: Built cleanly and practically with production patterns, not artificial landing-page templates.
-- **Institutional Clarity**: Clean white/slate surfaces with a primary forest green accent (`#14532D`) reflecting Jharkhand's state identity (*Vananchal*).
+- **Institutional Clarity**: Clean white/slate surfaces with a primary forest green accent (`#14532D`) reflecting Jharkhand's state identity (_Vananchal_).
 - **Anti-Slop Discipline**: Zero pill-enclosures for metadata, tabular numerals for figures, no artificial metrics, and no dead clicks.
 
 ---
@@ -30,6 +31,7 @@
 The PostgreSQL database schema is fully defined in `database/schema.sql` and engineered for PostgreSQL and Supabase.
 
 ### Schema Principles
+
 - **Consistent ID Strategy**: Standard string UUID identifiers across all tables.
 - **Indexed Search & Filter Fields**: Indexes applied to frequently filtered columns (e.g., `district`, `status`, `category_id`, `priority`, `verification_status`).
 - **No Unnecessary Foreign-Key Constraints**: Relationships are maintained via indexed IDs and application-level validation to prevent migration locking and cascade fragility in serverless/distributed environments.
@@ -93,6 +95,7 @@ server/repositories/
 ```
 
 ### Reusable Database Utilities (`server/utils/dbUtils.ts`)
+
 - **`buildPagination(options)`**: Bounds page/limit parameters and computes safe offsets.
 - **`buildOrderBy(sortOptions, allowedCols, defaultCol, defaultOrder)`**: Validates sorting fields against an allowlist to prevent SQL injection.
 - **`buildWhereBuilder()`**: Parameterized filter builder for conditions, operators, and search keywords (`ILIKE`).
@@ -149,24 +152,28 @@ PGDATABASE="jansamadhan"
 PGSSL="false"
 ```
 
-*Note*: If PostgreSQL is not active locally, the repository layer automatically falls back to an active stateful in-memory repository pre-seeded with authentic Jharkhand demonstration data, ensuring the app runs immediately without throwing unhandled database errors.
+_Note_: If PostgreSQL is not active locally, the repository layer automatically falls back to an active stateful in-memory repository pre-seeded with authentic Jharkhand demonstration data, ensuring the app runs immediately without throwing unhandled database errors.
 
 ---
 
 ## 7. Installation & Running Locally
 
 1. **Install Dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Run the Full-Stack Dev Server**:
+
    ```bash
    npm run dev
    ```
+
    This launches `server.ts` via `tsx` on `http://localhost:3000`. Express handles `/api/*` endpoints while mounting Vite dev middleware for React frontend hot-reloading on port 3000.
 
 3. **Build for Production**:
+
    ```bash
    npm run build
    npm start
@@ -201,6 +208,7 @@ PGSSL="false"
 ## 9. How Authentication & Role-Based Access Works
 
 ### Supported Roles
+
 1. `CITIZEN`: Submits societal issues, tracks status, browses public challenges.
 2. `GOVERNMENT`: Department officers review, verify ground reality, and assign problems for R&D.
 3. `UNIVERSITY`: Incubation cells and deans track problem statements.
@@ -210,7 +218,9 @@ PGSSL="false"
 7. `ADMIN`: State Nodal Officer monitors statewide metrics and audit logs.
 
 ### Demo Persona Switcher (For SIH Evaluation)
+
 In the top navigation bar, evaluators can click **Role Persona** to instantly switch between 7 pre-configured accounts (password for all demo accounts is `sih2026`):
+
 - **Anand Mahto** (`CITIZEN`) — Farmer, Ormanjhi Block, Ranchi
 - **Dr. Rameshwar Oraon** (`GOVERNMENT`) — Joint Director, Dept of Agriculture, Ranchi
 - **Dr. Vandana Bhattacharjee** (`UNIVERSITY`) — Dean Research, BIT Mesra
@@ -236,6 +246,7 @@ In the top navigation bar, evaluators can click **Role Persona** to instantly sw
 Phase 3 introduces comprehensive citizen intake, verification tracking, pre-verification editing, and storage abstraction.
 
 ### 1. Citizen Features
+
 - **Citizen Dashboard**: Real-time KPI feed (Total challenges, Under Review, Verified/R&D, My Problems), quick action triggers, category distribution analytics, and recent state problems.
 - **Problem Submission**: Full multi-step form capturing title, detailed context, 12 official categories, district, block, village, street address, GPS latitude/longitude (auto-detectable), severity, beneficiaries, contact preference, and supporting files.
 - **My Challenges**: Filterable, searchable table showing only submissions belonging to the logged-in citizen (`/citizen/my-challenges`).
@@ -246,6 +257,7 @@ Phase 3 introduces comprehensive citizen intake, verification tracking, pre-veri
 - **Storage Abstraction (`server/services/storageService.ts`)**: Implements `IStorageService` interface allowing zero-cost in-memory/base64 storage for hackathon testing, ready to bind Supabase Storage or AWS S3 without changing controller code.
 
 ### 2. Standardized Reusable UI Components
+
 - **`ChallengeForm`**: (`src/components/forms/ChallengeForm.tsx`) — Validated problem intake and edit form.
 - **`FileUpload`**: (`src/components/forms/FileUpload.tsx`) — Image and document file upload with preview and removal.
 - **`LocationPicker`**: (`src/components/forms/LocationPicker.tsx`) — District selector with 24 Jharkhand districts, block, village, address, and GPS browser coordinates.
@@ -256,6 +268,7 @@ Phase 3 introduces comprehensive citizen intake, verification tracking, pre-veri
 - **`ChallengeStatusTracker`**: (`src/components/common/ChallengeStatusTracker.tsx`) — Progressive visual pipeline stepper.
 
 ### 3. Backend Architecture Flow
+
 ```
 HTTP Request
   → Route: /api/challenges (/my/submissions, /upload, /:id)
@@ -266,5 +279,7 @@ HTTP Request
   → Repository: ChallengeRepository (parameterized SQL, explicit column projections)
   → Database: PostgreSQL / Memory / Firebase dual sync
 ```
-#   j a n s a m a d h a n  
+
+#   j a n s a m a d h a n 
+ 
  

@@ -1,18 +1,18 @@
-import { Request, Response } from 'express';
-import { challengeService } from '../services/challengeService.js';
-import { storageService } from '../services/storageService.js';
+import { Request, Response } from "express";
+import { challengeService } from "../services/challengeService.js";
+import { storageService } from "../services/storageService.js";
 import {
   validateCreateChallengeInput,
   validateUpdateChallengeInput,
   validateStatusUpdate,
-} from '../validators/challengeValidator.js';
+} from "../validators/challengeValidator.js";
 import {
   successResponse,
   errorResponse,
   paginatedResponse,
-} from '../utils/response.js';
-import { AuthenticatedRequest } from '../middleware/authMiddleware.js';
-import { ChallengeQueryFilters, ChallengeStatus } from '../types/challenge.js';
+} from "../utils/response.js";
+import { AuthenticatedRequest } from "../middleware/authMiddleware.js";
+import { ChallengeQueryFilters, ChallengeStatus } from "../types/challenge.js";
 
 export class ChallengeController {
   async getChallenges(req: Request, res: Response) {
@@ -24,7 +24,8 @@ export class ChallengeController {
         block: req.query.block as string,
         departmentId: req.query.departmentId as string,
         submittedByUserId: req.query.submittedByUserId as string,
-        submittedBy: (req.query.submittedBy || req.query.submittedByUserId) as string,
+        submittedBy: (req.query.submittedBy ||
+          req.query.submittedByUserId) as string,
         search: req.query.search as string,
         page: req.query.page ? parseInt(req.query.page as string, 10) : 1,
         limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 10,
@@ -43,7 +44,8 @@ export class ChallengeController {
         totalPages,
       });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to query challenges.';
+      const msg =
+        err instanceof Error ? err.message : "Failed to query challenges.";
       return errorResponse(res, msg, 500);
     }
   }
@@ -51,7 +53,11 @@ export class ChallengeController {
   async getMyChallenges(req: AuthenticatedRequest, res: Response) {
     try {
       if (!req.user) {
-        return errorResponse(res, 'Authentication required to view your challenges.', 401);
+        return errorResponse(
+          res,
+          "Authentication required to view your challenges.",
+          401,
+        );
       }
 
       const filters: ChallengeQueryFilters = {
@@ -78,7 +84,10 @@ export class ChallengeController {
         totalPages,
       });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to retrieve your challenges.';
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Failed to retrieve your challenges.";
       return errorResponse(res, msg, 500);
     }
   }
@@ -88,11 +97,18 @@ export class ChallengeController {
       const { id } = req.params;
       const challenge = await challengeService.getChallengeById(id);
       if (!challenge) {
-        return errorResponse(res, `Challenge with ID "${id}" was not found.`, 404);
+        return errorResponse(
+          res,
+          `Challenge with ID "${id}" was not found.`,
+          404,
+        );
       }
       return successResponse(res, challenge);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to retrieve challenge details.';
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Failed to retrieve challenge details.";
       return errorResponse(res, msg, 500);
     }
   }
@@ -100,12 +116,20 @@ export class ChallengeController {
   async createChallenge(req: AuthenticatedRequest, res: Response) {
     try {
       if (!req.user) {
-        return errorResponse(res, 'Authentication required to post a challenge.', 401);
+        return errorResponse(
+          res,
+          "Authentication required to post a challenge.",
+          401,
+        );
       }
 
       const validation = validateCreateChallengeInput(req.body);
       if (!validation.isValid) {
-        return errorResponse(res, validation.error || 'Invalid challenge parameters.', 400);
+        return errorResponse(
+          res,
+          validation.error || "Invalid challenge parameters.",
+          400,
+        );
       }
 
       const challenge = await challengeService.createChallenge(req.body, {
@@ -114,9 +138,15 @@ export class ChallengeController {
         role: req.user.role,
       });
 
-      return successResponse(res, challenge, 'Societal challenge registered successfully.', 201);
+      return successResponse(
+        res,
+        challenge,
+        "Societal challenge registered successfully.",
+        201,
+      );
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to submit challenge.';
+      const msg =
+        err instanceof Error ? err.message : "Failed to submit challenge.";
       return errorResponse(res, msg, 500);
     }
   }
@@ -124,13 +154,21 @@ export class ChallengeController {
   async updateChallenge(req: AuthenticatedRequest, res: Response) {
     try {
       if (!req.user) {
-        return errorResponse(res, 'Authentication required to edit a challenge.', 401);
+        return errorResponse(
+          res,
+          "Authentication required to edit a challenge.",
+          401,
+        );
       }
 
       const { id } = req.params;
       const validation = validateUpdateChallengeInput(req.body);
       if (!validation.isValid) {
-        return errorResponse(res, validation.error || 'Invalid parameters.', 400);
+        return errorResponse(
+          res,
+          validation.error || "Invalid parameters.",
+          400,
+        );
       }
 
       const updated = await challengeService.updateChallenge(id, req.body, {
@@ -138,10 +176,15 @@ export class ChallengeController {
         role: req.user.role,
       });
 
-      return successResponse(res, updated, 'Challenge successfully updated.');
+      return successResponse(res, updated, "Challenge successfully updated.");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to update challenge.';
-      const status = msg.startsWith('Forbidden') ? 403 : msg.includes('cannot be edited') ? 400 : 500;
+      const msg =
+        err instanceof Error ? err.message : "Failed to update challenge.";
+      const status = msg.startsWith("Forbidden")
+        ? 403
+        : msg.includes("cannot be edited")
+          ? 400
+          : 500;
       return errorResponse(res, msg, status);
     }
   }
@@ -153,14 +196,31 @@ export class ChallengeController {
 
       const validation = validateStatusUpdate(status);
       if (!validation.isValid) {
-        return errorResponse(res, validation.error || 'Invalid status parameter.', 400);
+        return errorResponse(
+          res,
+          validation.error || "Invalid status parameter.",
+          400,
+        );
       }
 
-      const verifier = req.user ? { id: req.user.userId, name: req.user.name } : undefined;
-      const updated = await challengeService.updateChallengeStatus(id, status as ChallengeStatus, verifier);
-      return successResponse(res, updated, `Challenge status updated to "${status}".`);
+      const verifier = req.user
+        ? { id: req.user.userId, name: req.user.name }
+        : undefined;
+      const updated = await challengeService.updateChallengeStatus(
+        id,
+        status as ChallengeStatus,
+        verifier,
+      );
+      return successResponse(
+        res,
+        updated,
+        `Challenge status updated to "${status}".`,
+      );
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to update challenge status.';
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Failed to update challenge status.";
       return errorResponse(res, msg, 400);
     }
   }
@@ -168,21 +228,37 @@ export class ChallengeController {
   async uploadSupportingFile(req: AuthenticatedRequest, res: Response) {
     try {
       if (!req.user) {
-        return errorResponse(res, 'Authentication required to upload media.', 401);
+        return errorResponse(
+          res,
+          "Authentication required to upload media.",
+          401,
+        );
       }
 
       const { fileName, mimeType, fileData, type } = req.body;
       if (!fileName || !fileData || !mimeType) {
-        return errorResponse(res, 'Missing required file payload (fileName, mimeType, fileData).', 400);
+        return errorResponse(
+          res,
+          "Missing required file payload (fileName, mimeType, fileData).",
+          400,
+        );
       }
 
-      // Max size check (~10MB limit in Base64)
-      if (typeof fileData === 'string' && fileData.length > 15 * 1024 * 1024) {
-        return errorResponse(res, 'File payload exceeds the 10MB limit.', 400);
+      if (typeof fileData === "string" && fileData.length > 4 * 1024 * 1024) {
+        return errorResponse(
+          res,
+          "File payload exceeds the 4MB request limit.",
+          400,
+        );
       }
 
-      const folder = type === 'DOCUMENT' ? 'documents' : 'images';
-      const uploaded = await storageService.uploadFile(fileData, fileName, mimeType, folder);
+      const folder = type === "DOCUMENT" ? "documents" : "images";
+      const uploaded = await storageService.uploadFile(
+        fileData,
+        fileName,
+        mimeType,
+        folder,
+      );
 
       return successResponse(
         res,
@@ -192,11 +268,12 @@ export class ChallengeController {
           sizeBytes: uploaded.sizeBytes,
           mimeType: uploaded.mimeType,
         },
-        'File successfully processed and stored.',
-        201
+        "File successfully processed and stored.",
+        201,
       );
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to process file upload.';
+      const msg =
+        err instanceof Error ? err.message : "Failed to process file upload.";
       return errorResponse(res, msg, 500);
     }
   }

@@ -1,46 +1,46 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { Card } from '../../components/common/Card';
-import { FormField } from '../../components/forms/FormField';
-import { Input } from '../../components/common/Input';
-import { Button } from '../../components/common/Button';
-import { UserRole } from '../../types/auth';
-import { ShieldCheck, UserCheck } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import { Card } from "../../components/common/Card";
+import { FormField } from "../../components/forms/FormField";
+import { Input } from "../../components/common/Input";
+import { Button } from "../../components/common/Button";
+import { UserRole } from "../../types/auth";
+import { ShieldCheck, UserCheck } from "lucide-react";
 
 export const LoginPage: React.FC = () => {
   const { login, switchDemoRole, demoAccounts } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const getDashboardForRole = (role: UserRole): string => {
     switch (role) {
-      case 'CITIZEN':
-        return '/citizen/dashboard';
-      case 'GOVERNMENT':
-        return '/government/dashboard';
-      case 'UNIVERSITY':
-      case 'STUDENT':
-      case 'FACULTY':
-        return '/university/dashboard';
-      case 'INDUSTRY':
-        return '/industry/dashboard';
-      case 'ADMIN':
-        return '/admin/dashboard';
+      case "CITIZEN":
+        return "/citizen/dashboard";
+      case "GOVERNMENT":
+        return "/government/dashboard";
+      case "UNIVERSITY":
+      case "STUDENT":
+      case "FACULTY":
+        return "/university/dashboard";
+      case "INDUSTRY":
+        return "/industry/dashboard";
+      case "ADMIN":
+        return "/admin/dashboard";
       default:
-        return '/';
+        return "/";
     }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError('Please provide both email and password.');
+      setError("Please provide both email and password.");
       return;
     }
 
@@ -48,10 +48,11 @@ export const LoginPage: React.FC = () => {
     setError(null);
     try {
       await login({ email, password });
-      const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
-      navigate(from || '/citizen/dashboard');
+      const from = (location.state as { from?: { pathname: string } })?.from
+        ?.pathname;
+      navigate(from || "/citizen/dashboard");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Invalid credentials';
+      const msg = err instanceof Error ? err.message : "Invalid credentials";
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -65,7 +66,8 @@ export const LoginPage: React.FC = () => {
       await switchDemoRole(role);
       navigate(getDashboardForRole(role));
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to switch demo persona';
+      const msg =
+        err instanceof Error ? err.message : "Failed to switch demo persona";
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -79,7 +81,8 @@ export const LoginPage: React.FC = () => {
           JanSamadhan Authentication Portal
         </h1>
         <p className="text-xs text-slate-500 mt-1 max-w-lg mx-auto">
-          Jharkhand State Societal Innovation Platform · Smart India Hackathon 2026
+          Jharkhand State Societal Innovation Platform · Smart India Hackathon
+          2026
         </p>
       </div>
 
@@ -92,8 +95,11 @@ export const LoginPage: React.FC = () => {
             subtitle="Access your registered state innovation profile"
             footer={
               <div className="text-center">
-                New user in Jharkhand?{' '}
-                <Link to="/register" className="font-semibold text-emerald-900 hover:underline">
+                New user in Jharkhand?{" "}
+                <Link
+                  to="/register"
+                  className="font-semibold text-emerald-900 hover:underline"
+                >
                   Create an account
                 </Link>
               </div>
@@ -150,7 +156,8 @@ export const LoginPage: React.FC = () => {
               </h2>
             </div>
             <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-              Test role-specific workflows across government, academia, and industry with one click:
+              Test role-specific workflows across government, academia, and
+              industry with one click:
             </p>
 
             <div className="space-y-2">

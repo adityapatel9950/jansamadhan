@@ -1,5 +1,5 @@
-import pg from 'pg';
-import { config } from './env.js';
+import pg from "pg";
+import { config } from "./env.js";
 
 const { Pool } = pg;
 
@@ -33,13 +33,19 @@ export const getDbPool = (): pg.Pool | null => {
       });
     }
 
-    pool.on('error', (err) => {
-      console.warn('[JanSamadhan DB Pool] Unexpected error on idle client:', err.message);
+    pool.on("error", (err) => {
+      console.warn(
+        "[JanSamadhan DB Pool] Unexpected error on idle client:",
+        err.message,
+      );
     });
 
     return pool;
   } catch (error: unknown) {
-    console.warn('[JanSamadhan DB] Failed to initialize PostgreSQL pool:', error);
+    console.warn(
+      "[JanSamadhan DB] Failed to initialize PostgreSQL pool:",
+      error,
+    );
     return null;
   }
 };
@@ -51,7 +57,7 @@ export const checkDatabaseHealth = async (): Promise<boolean> => {
   try {
     const client = await currentPool.connect();
     try {
-      const res = await client.query('SELECT 1 as alive');
+      const res = await client.query("SELECT 1 as alive");
       isPostgresAvailable = res.rows.length > 0;
       return isPostgresAvailable;
     } finally {

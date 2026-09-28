@@ -1,13 +1,15 @@
-import { userRepository } from '../repositories/userRepository.js';
-import { RegisterDTO, LoginDTO, SafeUser } from '../types/user.js';
-import { hashPassword, comparePassword } from '../utils/password.js';
-import { signToken } from '../utils/jwt.js';
+import { userRepository } from "../repositories/userRepository.js";
+import { RegisterDTO, LoginDTO, SafeUser } from "../types/user.js";
+import { hashPassword, comparePassword } from "../utils/password.js";
+import { signToken } from "../utils/jwt.js";
 
 export class AuthService {
-  async register(data: RegisterDTO): Promise<{ user: SafeUser; token: string }> {
+  async register(
+    data: RegisterDTO,
+  ): Promise<{ user: SafeUser; token: string }> {
     const existing = await userRepository.findByEmail(data.email);
     if (existing) {
-      throw new Error('An account with this email address already exists.');
+      throw new Error("An account with this email address already exists.");
     }
 
     const passwordHash = hashPassword(data.password);
@@ -37,12 +39,15 @@ export class AuthService {
   async login(data: LoginDTO): Promise<{ user: SafeUser; token: string }> {
     const user = await userRepository.findByEmail(data.email);
     if (!user) {
-      throw new Error('Invalid email or password.');
+      throw new Error("Invalid email or password.");
     }
 
     // Check password
-    if (user.passwordHash && !comparePassword(data.password, user.passwordHash)) {
-      throw new Error('Invalid email or password.');
+    if (
+      user.passwordHash &&
+      !comparePassword(data.password, user.passwordHash)
+    ) {
+      throw new Error("Invalid email or password.");
     }
 
     const { passwordHash: _, ...safeUser } = user;

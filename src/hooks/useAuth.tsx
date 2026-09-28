@@ -1,6 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { User, UserRole, LoginCredentials, RegisterCredentials } from '../types/auth';
-import { authService } from '../services/authService';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import {
+  User,
+  UserRole,
+  LoginCredentials,
+  RegisterCredentials,
+} from "../types/auth";
+import { authService } from "../services/authService";
 
 interface AuthContextType {
   user: User | null;
@@ -16,9 +27,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('jansamadhan_token'));
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem("jansamadhan_token"),
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [demoAccounts, setDemoAccounts] = useState<User[]>([]);
 
@@ -27,13 +42,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     authService
       .getDemoAccounts()
       .then((accounts) => setDemoAccounts(accounts))
-      .catch((err) => console.warn('[useAuth] Could not load demo accounts:', err));
+      .catch((err) =>
+        console.warn("[useAuth] Could not load demo accounts:", err),
+      );
   }, []);
 
   // Validate existing token
   useEffect(() => {
     const initAuth = async () => {
-      const storedToken = localStorage.getItem('jansamadhan_token');
+      const storedToken = localStorage.getItem("jansamadhan_token");
       if (!storedToken) {
         setIsLoading(false);
         return;
@@ -44,7 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(currentUser);
         setToken(storedToken);
       } catch {
-        localStorage.removeItem('jansamadhan_token');
+        localStorage.removeItem("jansamadhan_token");
         setUser(null);
         setToken(null);
       } finally {
@@ -88,7 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (targetAccount) {
       await login({
         email: targetAccount.email,
-        password: 'sih2026',
+        password: "sih2026",
       });
     }
   };
@@ -115,7 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
